@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/contexts/AuthContext'
 import type { Category, Entrepreneur } from '@/types/database'
 import { slugify } from '@/lib/helpers'
+import { ImageCropModal } from '@/components/ImageCropModal'
 
 const inputClass = 'w-full rounded-md border border-ink-700 bg-ink-900 px-3 py-2 text-sm text-cream focus:border-gold-500'
 const labelClass = 'mb-1.5 block text-sm text-sand'
@@ -22,6 +23,7 @@ export function EntrepreneurForm() {
     featured: false,
   })
   const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imageToCrop, setImageToCrop] = useState<{ src: string; name: string } | null>(null)
   const [saving, setSaving] = useState(false)
   const [geocoding, setGeocoding] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -76,6 +78,22 @@ export function EntrepreneurForm() {
 
   function set<K extends keyof Entrepreneur>(key: K, value: Entrepreneur[K]) {
     setEntrepreneur((prev) => ({ ...prev, [key]: value }))
+  }
+
+  function handleImageSelect(file: File | null) {
+    if (!file) return
+    setImageToCrop({ src: URL.createObjectURL(file), name: file.name })
+  }
+
+  function handleCropConfirm(cropped: File) {
+    setImageFile(cropped)
+    if (imageToCrop) URL.revokeObjectURL(imageToCrop.src)
+    setImageToCrop(null)
+  }
+
+  function handleCropCancel() {
+    if (imageToCrop) URL.revokeObjectURL(imageToCrop.src)
+    setImageToCrop(null)
   }
 
   async function handleGeocode() {
@@ -221,12 +239,24 @@ export function EntrepreneurForm() {
 
         <div>
           <label className={labelClass}>Foto / logo</label>
-          <input type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
+          <input type="file" accept="image/*" onChange={(e) => handleImageSelect(e.target.files?.[0] ?? null)}
             className="text-sm text-sand file:mr-4 file:rounded-md file:border-0 file:bg-gold-gradient file:px-4 file:py-2 file:text-sm file:font-semibold file:text-ink-950" />
+          {imageFile && (
+            <img src={URL.createObjectURL(imageFile)} alt="" className="mt-2 h-24 w-24 rounded-md object-cover" />
+          )}
           {entrepreneur.image_url && !imageFile && (
             <img src={entrepreneur.image_url} alt="" className="mt-2 h-24 w-24 rounded-md object-cover" />
           )}
         </div>
+
+        {imageToCrop && (
+          <ImageCropModal
+            imageSrc={imageToCrop.src}
+            fileName={imageToCrop.name}
+            onCancel={handleCropCancel}
+            onConfirm={handleCropConfirm}
+          />
+        )}
 
         <div className="flex items-center gap-6">
           <label className="flex items-center gap-2 text-sm text-sand">

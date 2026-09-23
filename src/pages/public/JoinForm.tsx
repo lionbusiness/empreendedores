@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { supabase } from '@/lib/supabase'
 import type { Category } from '@/types/database'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
+import { ImageCropModal } from '@/components/ImageCropModal'
 
 const inputClass =
   'w-full rounded-md border border-ink-700 bg-ink-900 px-3 py-2 text-sm text-cream placeholder:text-sand/60 focus:border-gold-500'
@@ -13,6 +14,7 @@ export function JoinForm() {
   const [description, setDescription] = useState('')
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [imageToCrop, setImageToCrop] = useState<{ src: string; name: string } | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [done, setDone] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -29,8 +31,20 @@ export function JoinForm() {
   }, [])
 
   function handleImage(file: File | null) {
-    setImageFile(file)
-    setImagePreview(file ? URL.createObjectURL(file) : null)
+    if (!file) return
+    setImageToCrop({ src: URL.createObjectURL(file), name: file.name })
+  }
+
+  function handleCropConfirm(cropped: File) {
+    setImageFile(cropped)
+    setImagePreview(URL.createObjectURL(cropped))
+    if (imageToCrop) URL.revokeObjectURL(imageToCrop.src)
+    setImageToCrop(null)
+  }
+
+  function handleCropCancel() {
+    if (imageToCrop) URL.revokeObjectURL(imageToCrop.src)
+    setImageToCrop(null)
   }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -290,6 +304,15 @@ export function JoinForm() {
           {submitting ? 'Enviando…' : 'Enviar solicitação'}
         </button>
       </form>
+
+      {imageToCrop && (
+        <ImageCropModal
+          imageSrc={imageToCrop.src}
+          fileName={imageToCrop.name}
+          onCancel={handleCropCancel}
+          onConfirm={handleCropConfirm}
+        />
+      )}
     </div>
   )
 }
