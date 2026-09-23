@@ -1,5 +1,9 @@
 import type { Entrepreneur } from '@/types/database'
 
+// Caminho do logo já considerando o "base" configurado no vite.config.ts
+// (necessário porque o site pode ser publicado numa subpasta, ex: /empreendedores/)
+export const logoSrc = `${import.meta.env.BASE_URL}logo.png`
+
 export const serviceTypeLabel: Record<string, string> = {
   online: 'Online',
   presencial: 'Presencial',

@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
+import { logoSrc } from '@/lib/helpers'
 
 export function Login() {
   const { signIn, session } = useAuth()
@@ -26,7 +27,7 @@ export function Login() {
     <div className="flex min-h-screen items-center justify-center bg-ink-950 px-4">
       <form onSubmit={handleSubmit} className="w-full max-w-sm rounded-lg border border-ink-700 bg-ink-800 p-8">
         <div className="mb-6 flex flex-col items-center gap-3">
-          <img src="/logo.png" alt="Lion Business" className="h-14 w-14 object-contain" />
+          <img src={logoSrc} alt="Lion Business" className="h-14 w-14 object-contain" />
           <h1 className="font-display text-xl text-cream">Painel administrativo</h1>
         </div>
         <div className="flex flex-col gap-4">

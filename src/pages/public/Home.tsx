@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase'
 import type { Entrepreneur } from '@/types/database'
 import { EntrepreneurCard } from '@/components/EntrepreneurCard'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
+import { logoSrc } from '@/lib/helpers'
 
 export function Home() {
   useDocumentTitle('Início')
@@ -29,7 +30,7 @@ export function Home() {
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-gold-700/20">
         <div className="container-page flex flex-col items-center gap-6 py-24 text-center">
-          <img src="/logo.png" alt="Lion Business" className="h-24 w-24 object-contain sm:h-28 sm:w-28" />
+          <img src={logoSrc} alt="Lion Business" className="h-24 w-24 object-contain sm:h-28 sm:w-28" />
           <h1 className="max-w-2xl font-display text-4xl font-semibold leading-tight text-cream sm:text-5xl">
             O diretório de empreendedores da <span className="text-gold-gradient">Lion Betel Church</span>
           </h1>

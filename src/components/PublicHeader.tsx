@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import { logoSrc } from '@/lib/helpers'
 
 const links = [
   { to: '/', label: 'Início' },
   { to: '/empreendedores', label: 'Empreendedores' },
-  { to: '/quero-participar', label: 'Quero participar' },
   { to: '/sobre', label: 'Sobre' },
+  { to: '/quero-participar', label: 'Quero participar' },
 ]
 
 export function PublicHeader() {
@@ -15,8 +16,8 @@ export function PublicHeader() {
     <header className="sticky top-0 z-40 border-b border-gold-700/20 bg-ink-950/90 backdrop-blur">
       <div className="container-page flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
-          <img src="/logo.png" alt="Lion Business" className="h-9 w-9 object-contain" />
-          <span className="font-display text-lg font-semibold tracking-wide text-cream">
+          <img src={logoSrc} alt="Lion Business" className="h-9 w-9 object-contain" />
+          <span className="font-display text-xl font-bold uppercase tracking-[0.15em] text-cream">
             Lion <span className="text-gold-gradient">Business</span>
           </span>
         </Link>

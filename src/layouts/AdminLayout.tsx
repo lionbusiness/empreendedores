@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
+import { logoSrc } from '@/lib/helpers'
 
 const links = [
   { to: '/admin', label: 'Dashboard', end: true },
@@ -24,8 +25,8 @@ export function AdminLayout() {
       {/* Sidebar desktop */}
       <aside className="hidden w-60 shrink-0 border-r border-ink-800 bg-ink-900 p-4 md:flex md:flex-col">
         <div className="mb-6 flex items-center gap-2 px-2">
-          <img src="/logo.png" alt="Lion Business" className="h-8 w-8 object-contain" />
-          <span className="font-display text-lg text-cream">Lion Business</span>
+          <img src={logoSrc} alt="Lion Business" className="h-8 w-8 object-contain" />
+          <span className="font-display text-lg font-bold uppercase tracking-[0.12em] text-cream">Lion Business</span>
         </div>
         <nav className="flex flex-1 flex-col gap-1">
           {links.map((l) => (
@@ -41,8 +42,8 @@ export function AdminLayout() {
       {/* Header mobile */}
       <div className="flex items-center justify-between border-b border-ink-800 bg-ink-900 p-4 md:hidden">
         <div className="flex items-center gap-2">
-          <img src="/logo.png" alt="Lion Business" className="h-7 w-7 object-contain" />
-          <span className="font-display text-cream">Lion Business</span>
+          <img src={logoSrc} alt="Lion Business" className="h-7 w-7 object-contain" />
+          <span className="font-display text-base font-bold uppercase tracking-[0.12em] text-cream">Lion Business</span>
         </div>
         <button onClick={() => setOpen((v) => !v)} className="text-sand" aria-label="Menu">☰</button>
       </div>
