@@ -23,6 +23,7 @@ export function EntrepreneurForm() {
   })
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [saving, setSaving] = useState(false)
+  const [geocoding, setGeocoding] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -75,6 +76,34 @@ export function EntrepreneurForm() {
 
   function set<K extends keyof Entrepreneur>(key: K, value: Entrepreneur[K]) {
     setEntrepreneur((prev) => ({ ...prev, [key]: value }))
+  }
+
+  async function handleGeocode() {
+    const query = [entrepreneur.address, entrepreneur.neighborhood, entrepreneur.city, entrepreneur.state]
+      .filter(Boolean)
+      .join(', ')
+    if (!query) {
+      setError('Preencha ao menos a cidade antes de buscar coordenadas.')
+      return
+    }
+    setGeocoding(true)
+    setError(null)
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`
+      )
+      const results = await res.json()
+      if (!results?.[0]) {
+        setError('Não foi possível encontrar essa localização. Tente um endereço mais específico.')
+        return
+      }
+      set('latitude', parseFloat(results[0].lat))
+      set('longitude', parseFloat(results[0].lon))
+    } catch {
+      setError('Erro ao buscar coordenadas. Tente novamente.')
+    } finally {
+      setGeocoding(false)
+    }
   }
 
   return (
@@ -151,6 +180,22 @@ export function EntrepreneurForm() {
           <div className="sm:col-span-3">
             <label className={labelClass}>Endereço</label>
             <input className={inputClass} value={entrepreneur.address ?? ''} onChange={(e) => set('address', e.target.value)} />
+          </div>
+          <div className="sm:col-span-3">
+            <button
+              type="button"
+              onClick={handleGeocode}
+              disabled={geocoding}
+              className="rounded-md border border-gold-600/50 px-4 py-2 text-sm text-gold-300 hover:bg-ink-800 disabled:opacity-50"
+            >
+              {geocoding ? 'Buscando…' : '📍 Buscar coordenadas p/ o mapa'}
+            </button>
+            {entrepreneur.latitude != null && entrepreneur.longitude != null && (
+              <p className="mt-2 text-xs text-sand">
+                Coordenadas: {entrepreneur.latitude.toFixed(5)}, {entrepreneur.longitude.toFixed(5)} — este
+                empreendedor vai aparecer no mapa.
+              </p>
+            )}
           </div>
         </div>
 

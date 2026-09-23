@@ -54,6 +54,9 @@ export interface Entrepreneur {
   service_area: ServiceArea
   business_hours: string | null
   image_url: string | null
+  latitude: number | null
+  longitude: number | null
+  view_count: number
   status: EntrepreneurStatus
   featured: boolean
   created_at: string

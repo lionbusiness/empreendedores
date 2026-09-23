@@ -64,6 +64,7 @@ export function Entrepreneurs() {
               <th className="px-4 py-3">Cidade</th>
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3">Destaque</th>
+              <th className="px-4 py-3">Visualizações</th>
               <th className="px-4 py-3"></th>
             </tr>
           </thead>
@@ -77,6 +78,7 @@ export function Entrepreneurs() {
                   <button onClick={() => toggleStatus(e)}><StatusBadge status={e.status} /></button>
                 </td>
                 <td className="px-4 py-3 text-sand">{e.featured ? 'Sim' : 'Não'}</td>
+                <td className="px-4 py-3 text-sand">{e.view_count ?? 0}</td>
                 <td className="px-4 py-3 space-x-3">
                   <Link to={`/admin/empreendedores/${e.id}`} className="text-gold-400 hover:text-gold-300">Editar</Link>
                   <button onClick={() => remove(e)} className="text-red-400 hover:text-red-300">Excluir</button>
@@ -84,7 +86,7 @@ export function Entrepreneurs() {
               </tr>
             ))}
             {!loading && filtered.length === 0 && (
-              <tr><td colSpan={6} className="px-4 py-6 text-center text-sand">Nenhum empreendedor cadastrado.</td></tr>
+              <tr><td colSpan={7} className="px-4 py-6 text-center text-sand">Nenhum empreendedor cadastrado.</td></tr>
             )}
           </tbody>
         </table>

@@ -16,6 +16,11 @@ export function JoinForm() {
   const [submitting, setSubmitting] = useState(false)
   const [done, setDone] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [captchaAnswer, setCaptchaAnswer] = useState('')
+  const [captchaNums] = useState(() => ({
+    a: Math.floor(Math.random() * 8) + 1,
+    b: Math.floor(Math.random() * 8) + 1,
+  }))
 
   useEffect(() => {
     supabase.from('categories').select('*').eq('active', true).order('name').then(({ data }) => {
@@ -33,6 +38,19 @@ export function JoinForm() {
     setError(null)
 
     const form = new FormData(e.currentTarget)
+
+    // Campo-armadilha: invisível pra humanos, bots que preenchem tudo caem aqui
+    if (String(form.get('website_url') || '').trim() !== '') {
+      // finge sucesso pro bot, sem enviar nada de verdade
+      setDone(true)
+      return
+    }
+
+    if (parseInt(captchaAnswer, 10) !== captchaNums.a + captchaNums.b) {
+      setError('Resposta da verificação incorreta. Tente novamente.')
+      return
+    }
+
     const consent = form.get('consent') === 'on'
     if (!consent) {
       setError('É necessário autorizar o uso das informações para prosseguir.')
@@ -231,6 +249,30 @@ export function JoinForm() {
             <img src={imagePreview} alt="Pré-visualização" className="mt-2 h-32 w-32 rounded-md object-cover" />
           )}
         </fieldset>
+
+        {/* Campo-armadilha anti-bot: fica invisível e fora da navegação por teclado pra humanos */}
+        <input
+          type="text"
+          name="website_url"
+          tabIndex={-1}
+          autoComplete="off"
+          className="absolute left-[-9999px] h-0 w-0 opacity-0"
+          aria-hidden="true"
+        />
+
+        <div>
+          <label className={labelClass} htmlFor="captcha">
+            Verificação: quanto é {captchaNums.a} + {captchaNums.b}? *
+          </label>
+          <input
+            required
+            id="captcha"
+            inputMode="numeric"
+            className={`${inputClass} max-w-[120px]`}
+            value={captchaAnswer}
+            onChange={(e) => setCaptchaAnswer(e.target.value)}
+          />
+        </div>
 
         <label className="flex items-start gap-3 text-sm text-sand">
           <input type="checkbox" name="consent" className="mt-1 h-4 w-4 accent-gold-500" />

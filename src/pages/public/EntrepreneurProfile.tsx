@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import type { Entrepreneur } from '@/types/database'
-import { serviceAreaLabel, serviceTypeLabel, whatsappLink, instagramLink, mapsLink } from '@/lib/helpers'
+import { serviceAreaLabel, serviceTypeLabel, whatsappLink, instagramLink, mapsLink, shareUrl } from '@/lib/helpers'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 
 export function EntrepreneurProfile() {
@@ -20,8 +20,13 @@ export function EntrepreneurProfile() {
       .eq('status', 'active')
       .single()
       .then(({ data, error }) => {
-        if (error || !data) setNotFound(true)
-        else setEntrepreneur(data as Entrepreneur)
+        if (error || !data) {
+          setNotFound(true)
+        } else {
+          setEntrepreneur(data as Entrepreneur)
+          // Conta a visualização (não bloqueia a renderização, falha silenciosamente)
+          supabase.rpc('increment_entrepreneur_views', { p_id: (data as Entrepreneur).id })
+        }
       })
   }, [slug])
 
@@ -109,6 +114,14 @@ export function EntrepreneurProfile() {
                 Ligar: {e.phone}
               </a>
             )}
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(`Dá uma olhada no perfil de ${e.business_name} no Lion Business: ${shareUrl(e)}`)}`}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-md border border-ink-700 px-4 py-3 text-center text-sm text-sand hover:border-gold-600/50 hover:text-cream"
+            >
+              ↗ Compartilhar perfil
+            </a>
           </div>
         </div>
 
@@ -117,7 +130,10 @@ export function EntrepreneurProfile() {
             <span className="text-xs uppercase tracking-wide text-gold-500">{e.category.name}</span>
           )}
           <h1 className="mt-1 font-display text-3xl font-semibold text-cream sm:text-4xl">{e.business_name}</h1>
-          <p className="mt-1 text-sand">por {e.owner_name}</p>
+          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sand">
+            <span>por {e.owner_name}</span>
+            <span className="text-xs text-sand/60">· 👁 {e.view_count ?? 0} visualizações</span>
+          </div>
 
           {e.description && <p className="mt-6 max-w-2xl leading-relaxed text-cream/90">{e.description}</p>}
 

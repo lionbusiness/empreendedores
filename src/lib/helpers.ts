@@ -33,6 +33,15 @@ export function mapsLink(entrepreneur: Pick<Entrepreneur, 'address' | 'city' | '
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
 }
 
+// URL "de compartilhamento": aponta pra página estática pré-gerada (com
+// as meta tags certas pro WhatsApp/redes sociais), que redireciona pro
+// app de verdade. Diferente do link interno usado pela navegação em si
+// (que usa a rota com # do HashRouter).
+const SITE_ORIGIN = 'https://lionbusiness.github.io/empreendedores'
+export function shareUrl(entrepreneur: Pick<Entrepreneur, 'slug'>) {
+  return `${SITE_ORIGIN}/empreendedores/${entrepreneur.slug}/`
+}
+
 export function slugify(value: string) {
   return value
     .toLowerCase()
