@@ -7,7 +7,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 // https://<usuario>.github.io/<repo>/  (ex: base: '/lion-business/')
 // Se for usar domínio próprio, deixe base: '/'
 export default defineConfig({
-  base: '/lion-business/',
+  base: '/empreendedores/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
