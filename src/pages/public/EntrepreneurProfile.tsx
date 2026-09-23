@@ -24,8 +24,10 @@ export function EntrepreneurProfile() {
           setNotFound(true)
         } else {
           setEntrepreneur(data as Entrepreneur)
-          // Conta a visualização (não bloqueia a renderização, falha silenciosamente)
-          supabase.rpc('increment_entrepreneur_views', { p_id: (data as Entrepreneur).id })
+          // Conta a visualização (não bloqueia a renderização, falha silenciosamente).
+          // Importante: precisa de .then() pra realmente disparar a chamada —
+          // o builder do supabase-js só executa quando é consumido como promise.
+          supabase.rpc('increment_entrepreneur_views', { p_id: (data as Entrepreneur).id }).then(() => {})
         }
       })
   }, [slug])
