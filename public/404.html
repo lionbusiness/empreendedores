@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>Lion Business</title>
+    <!--
+      Truque padrão pra SPAs no GitHub Pages (spa-github-pages).
+      O GitHub Pages sempre serve este arquivo quando a URL não bate
+      com um arquivo real. Ele redireciona pra index.html preservando
+      a rota original via query string, e um script no index.html
+      (veja index.html) restaura a URL antes do React Router assumir.
+
+      pathSegmentsToKeep = 1 porque o site vive em /empreendedores/
+      (um segmento de pasta). Se o nome do repositório mudar, ajuste
+      esse número de acordo.
+    -->
+    <script type="text/javascript">
+      var pathSegmentsToKeep = 1;
+      var l = window.location;
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.hash
+      );
+    </script>
+  </head>
+  <body></body>
+</html>
