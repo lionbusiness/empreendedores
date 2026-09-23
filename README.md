@@ -32,6 +32,7 @@ supabase/
   02_rls.sql      políticas de Row Level Security
   03_storage.sql  bucket e políticas de storage
   04_seed.sql     organização, categorias e primeiro admin
+  05_features.sql colunas de localização/visualizações (mapa e estatísticas)
 ```
 
 ## 1. Configurar o Supabase
@@ -62,6 +63,9 @@ Preencha `.env` com a URL e a chave anônima do Supabase.
    - `COLE_O_USER_UID_AQUI` pelo UID do usuário criado.
 
 Esse usuário poderá então logar em `/admin/login`.
+
+Por fim, rode também o `supabase/05_features.sql` (colunas de latitude/longitude
+e contador de visualizações, usados pelo mapa e pelas estatísticas).
 
 ## 4. Rodar localmente
 
